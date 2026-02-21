@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login – Climate Credit Score Engine</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        /* Login page specific styles */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ambient blobs */
+        .login-page::before {
+            content: '';
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 159, 67, 0.12) 0%, transparent 70%);
+            top: -150px;
+            left: -150px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .login-page::after {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(166, 80, 20, 0.12) 0%, transparent 70%);
+            bottom: -100px;
+            right: -100px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .login-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            max-width: 960px;
+            width: 90%;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            z-index: 1;
+        }
+
+        /* Left branding panel */
+        .login-brand {
+            background: linear-gradient(145deg, rgba(255, 159, 67, 0.12) 0%, rgba(15, 9, 5, 0.95) 60%);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 4rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.3rem;
+            background: linear-gradient(90deg, #fff, #ffeaa7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .brand-logo i {
+            color: #ff9f43;
+            filter: drop-shadow(0 0 10px rgba(255, 159, 67, 0.5));
+        }
+
+        .brand-tagline h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 500;
+            letter-spacing: -0.03em;
+            color: #fff;
+            line-height: 1.2;
+            margin-bottom: 1.2rem;
+        }
+
+        .brand-tagline h2 span {
+            background: linear-gradient(135deg, #ff9f43, #ffeaa7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-tagline p {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .brand-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: left;
+        }
+
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #ff9f43;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Right form panel */
+        .login-form-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            padding: 4rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .form-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-header p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Role Selector */
+        .role-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .role-btn {
+            padding: 1rem;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .role-btn i {
+            display: block;
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.6;
+            transition: all 0.25s ease;
+        }
+
+        .role-btn:hover {
+            border-color: rgba(255, 159, 67, 0.4);
+            background: rgba(255, 159, 67, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .role-btn.active {
+            border-color: #ff9f43;
+            background: rgba(255, 159, 67, 0.1);
+            color: #ffbe76;
+            box-shadow: 0 0 20px rgba(255, 159, 67, 0.15);
+        }
+
+        .role-btn.active i {
+            opacity: 1;
+            color: #ff9f43;
+        }
+
+        /* Form fields */
+        .login-form .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .login-form .form-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .login-form .form-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .login-form .form-input:focus {
+            outline: none;
+            border-color: rgba(255, 159, 67, 0.6);
+            background: rgba(255, 159, 67, 0.04);
+            box-shadow: 0 0 0 3px rgba(255, 159, 67, 0.08);
+        }
+
+        .login-form .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .login-submit {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 14px;
+            border: none;
+            background: linear-gradient(135deg, #ff9f43, #ee5a24);
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+            box-shadow: 0 8px 25px rgba(238, 90, 36, 0.3);
+            letter-spacing: 0.01em;
+        }
+
+        .login-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(238, 90, 36, 0.45);
+        }
+
+        .login-submit:active {
+            transform: translateY(0);
+        }
+
+        .form-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .flash-message {
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.2rem;
+            font-size: 0.85rem;
+            background: rgba(235, 77, 75, 0.1);
+            border: 1px solid rgba(235, 77, 75, 0.3);
+            color: #ff8080;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-page">
+        <div class="login-wrapper">
+            <!-- Left Branding -->
+            <div class="login-brand">
+                <div class="brand-logo">
+                    <i class="fa-solid fa-earth-americas"></i>
+                    <span>ClimateCredit</span>
+                </div>
+
+                <div class="brand-tagline">
+                    <h2>Measure the <span>climate risk</span> of every loan.</h2>
+                    <p>A banking-grade engine that evaluates long-term climate exposure for properties and generates an
+                        accurate credit score adjustment.</p>
+                </div>
+
+                <div class="brand-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">50+</div>
+                        <div class="stat-label">Risk Factors</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">0–100</div>
+                        <div class="stat-label">Score Range</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">Real-time</div>
+                        <div class="stat-label">Analysis</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Login Form -->
+            <div class="login-form-panel">
+                <div class="form-header">
+                    <h3>Welcome back</h3>
+                    <p>Select your role and sign in to continue</p>
+                </div>
+
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="flash-message">
+                    <i class="fa-solid fa-circle-exclamation"></i>&nbsp; {{ messages[0] }}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Role Selector -->
+                <div class="role-selector" id="roleSelector">
+                    <button class="role-btn active" data-role="official" onclick="selectRole(this, 'official')">
+                        <i class="fa-solid fa-building-columns"></i>
+                        Bank Official
+                    </button>
+                    <button class="role-btn" data-role="borrower" onclick="selectRole(this, 'borrower')">
+                        <i class="fa-solid fa-user"></i>
+                        Loan Borrower
+                    </button>
+                </div>
+
+                <form class="login-form" action="{{ url_for('login') }}" method="POST">
+                    <input type="hidden" name="role" id="roleInput" value="official">
+
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username / Email</label>
+                        <input class="form-input" type="text" id="username" name="username"
+                            placeholder="Enter your username" required autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input class="form-input" type="password" id="password" name="password" placeholder="••••••••"
+                            required autocomplete="current-password">
+                    </div>
+
+                    <button type="submit" class="login-submit" id="loginBtn">
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="form-footer">
+                    Secured by ClimateCredit &nbsp;·&nbsp; All data encrypted
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectRole(el, role) {
+            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('roleInput').value = role;
+
+            const btn = document.getElementById('loginBtn');
+            btn.textContent = role === 'official' ? 'Sign In as Bank Official' : 'Sign In as Borrower';
+        }
+    </script>
+</body>
+
+</html>

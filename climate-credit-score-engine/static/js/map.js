@@ -8,19 +8,23 @@ function initMap(elementId, inputId) {
 
     locationInputId = inputId;
 
-    // Default: Miami
-    const defaultLat = 25.7617;
-    const defaultLng = -80.1918;
+    // Default: Center of India
+    const defaultLat = 22.5937;
+    const defaultLng = 78.9629;
 
-    map = L.map(elementId).setView([defaultLat, defaultLng], 13);
+    map = L.map(elementId, {
+        center: [defaultLat, defaultLng],
+        zoom: 5,
+        minZoom: 4
+    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         className: 'dark-map-tiles'
     }).addTo(map);
 
-    // Initial marker (mock)
-    updateMarker(defaultLat, defaultLng, "Selected Location");
+    // Initial marker on New Delhi
+    updateMarker(28.6139, 77.2090, "New Delhi, India");
 
     // Click to pin
     map.on('click', async function (e) {

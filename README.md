@@ -1,16 +1,51 @@
-# React + Vite
+# Climate Credit Score Engine
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A full-stack web application to evaluate long-term climate risks for properties and generate a Climate Credit Score for financial institutions.
 
-Currently, two official plugins are available:
+## Tech Stack
+- **Backend:** Python (Flask)
+- **Database:** Firebase Firestore
+- **Frontend:** HTML, CSS, JavaScript
+- **Visualization:** Chart.js, Leaflet.js
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup Instructions
 
-## React Compiler
+### 1. Prerequisites
+- Python 3.8+
+- node.js (optional, only if you expand to React/Vue)
+- Firebase Account (for `serviceAccountKey.json`)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 2. Installation
 
-## Expanding the ESLint configuration
+1.  Clone or download the repository.
+2.  Navigate to the project directory:
+    ```bash
+    cd climate-credit-score-engine
+    ```
+3.  Install Python dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 3. Firebase Configuration
+1.  Go to your Firebase Project Settings > Service Accounts.
+2.  Generate a new private key (`.json` file).
+3.  Rename it to `serviceAccountKey.json` and place it in the root of this project (next to `app.py`).
+    - *Note:* The app handles missing credentials gracefully for demo purposes (database features will be disabled).
+
+### 4. Running the App
+1.  Start the Flask server:
+    ```bash
+    python app.py
+    ```
+    Or if you have `flask` installed globally:
+    ```bash
+    flask run
+    ```
+2.  Open your browser and search for the localhost URL (usually `http://127.0.0.1:5000`).
+
+## Features
+-   **Analysis Engine:** Evaluate properties by location.
+-   **Climate Credit Score:** 0-100 rating based on Flood, Storm, Heat, and Sea Level risks.
+-   **Portfolio Dashboard:** View aggregate risk across multiple assets.
+-   **Interactive Maps:** Visual location confirmation and portfolio mapping.

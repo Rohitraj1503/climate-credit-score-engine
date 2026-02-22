@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
-from flask_cors import CORS
 from firebase_service import init_firebase, get_property, save_property, get_portfolio, get_all_properties
 import os
-import requests
 from dotenv import load_dotenv
 from functools import wraps
 
@@ -10,7 +8,6 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'climate-credit-secret-key-2026')
-CORS(app) # Enable CORS for all routes
 
 # Initialize Firebase
 init_firebase()
@@ -133,49 +130,6 @@ def analyze_property():
 def get_portfolio_data():
     properties = get_all_properties()
     return jsonify(properties)
-
-@app.route('/api/geocode', methods=['GET'])
-def geocode():
-    query = request.args.get('q', '').strip()
-    if not query:
-        return jsonify({'error': 'Missing query parameter'}), 400
-
-    print(f"[DEBUG] Geocoding request for: {query}")
-    
-    try:
-        # User-Agent is required by Nominatim to avoid being blocked
-        headers = {
-            'User-Agent': 'climate-credit-engine'
-        }
-        params = {
-            'q': query,
-            'format': 'json',
-            'limit': 1,
-            'countrycodes': 'in' # Prioritize India as per previous patterns
-        }
-        
-        response = requests.get('https://nominatim.openstreetmap.org/search', headers=headers, params=params)
-        response.raise_for_status()
-        data = response.json()
-        
-        print(f"[DEBUG] Nominatim API response: {data}")
-
-        if not data:
-            return jsonify({'error': 'Location not found'}), 404
-
-        location = data[0]
-        result = {
-            'lat': float(location['lat']),
-            'lng': float(location['lon']),
-            'display_name': location['display_name']
-        }
-        
-        print(f"[DEBUG] Final coordinates: {result['lat']}, {result['lng']}")
-        return jsonify(result)
-
-    except requests.exceptions.RequestException as e:
-        print(f"[ERROR] Geocoding API failed: {e}")
-        return jsonify({'error': 'Internal server error during geocoding'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

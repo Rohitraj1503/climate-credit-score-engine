@@ -32,6 +32,12 @@
     box-sizing: border-box;
 }
 
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 body {
     font-family: var(--font-body);
     background-color: var(--bg-dark);
@@ -259,16 +265,16 @@ a {
 }
 
 /* Main Content */
-.content {
+.main-content {
+    flex: 1;
     padding-top: 80px;
-    min-height: calc(100vh - 80px);
-    /* Adjust for footer */
+    min-height: 0; /* Important for flex child to be able to shrink if needed */
 }
 
 /* Footer */
 .footer {
     text-align: center;
-    padding: 3rem;
+    padding: 20px 0;
     color: var(--text-secondary);
     background: #0a0502;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -574,8 +580,7 @@ a {
 .analysis-container {
     display: grid;
     grid-template-columns: 400px 1fr 400px;
-    height: calc(100vh - 80px);
-    overflow: hidden;
+    min-height: calc(100vh - 80px - 60px); /* Adjusting for navbar and estimated footer height */
     gap: 1rem;
     padding: 1rem;
 }

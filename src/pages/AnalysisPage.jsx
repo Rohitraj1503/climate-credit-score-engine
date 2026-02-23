@@ -54,18 +54,19 @@ const AnalysisPage = () => {
     const [loading, setLoading] = useState(false);
     const [mapCenter, setMapCenter] = useState([20.5937, 78.9629]); // India center default
     const [markerPosition, setMarkerPosition] = useState([20.5937, 78.9629]);
+    const [analysisData, setAnalysisData] = useState(null);
 
     const setPosition = (pos) => {
         setMapCenter(pos);
         setMarkerPosition(pos);
     };
 
-    // Chart Data States
+    // Dynamic Chart Data derived from analysisData or fallback to empty/mock while loading
     const radarData = {
-        labels: ['Flood', 'Heat', 'Storm', 'Sea Level', 'Fire'],
+        labels: analysisData?.risk_profile?.labels || ['Flood', 'Heat', 'Storm', 'Sea Level', 'Fire'],
         datasets: [{
             label: 'Risk Profile',
-            data: [65, 80, 45, 70, 30],
+            data: analysisData?.risk_profile?.data || [0, 0, 0, 0, 0],
             backgroundColor: 'rgba(255, 159, 67, 0.2)',
             borderColor: '#ff9f43',
             pointBackgroundColor: '#ff9f43',
@@ -73,10 +74,10 @@ const AnalysisPage = () => {
     };
 
     const tempTrendData = {
-        labels: ['2000', '2010', '2020', '2030', '2040', '2050'],
+        labels: analysisData?.temperature_trend?.labels || ['2030', '2040', '2050', '2060', '2070'],
         datasets: [{
-            label: 'Temp Increase (°C)',
-            data: [0.5, 0.8, 1.2, 1.8, 2.5, 3.2],
+            label: 'Risk Projection',
+            data: analysisData?.temperature_trend?.data || [0, 0, 0, 0, 0],
             borderColor: '#f6b93b',
             tension: 0.4,
             fill: true,
@@ -85,9 +86,9 @@ const AnalysisPage = () => {
     };
 
     const compositionData = {
-        labels: ['Built Up', 'Greenery', 'Water'],
+        labels: analysisData?.environmental_composition?.labels || ['Built Up', 'Greenery', 'Water'],
         datasets: [{
-            data: [70, 20, 10],
+            data: analysisData?.environmental_composition?.data || [33, 33, 34],
             backgroundColor: ['#eb4d4b', '#00ff9d', '#ffbe76'],
             borderWidth: 0,
         }]
@@ -160,6 +161,39 @@ const AnalysisPage = () => {
             legend: { position: 'right' }
         }
     };
+
+    const fetchAnalysis = async (latitude, longitude) => {
+        setLoading(true);
+        const payload = {
+            lat: latitude,
+            lng: longitude,
+            asset_value: Number(assetValue),
+            loan_term: Number(loanTerm)
+        };
+
+        try {
+            const res = await fetch(`${API_BASE}/api/analyze`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) throw new Error("Analysis fetch failed");
+
+            const result = await res.json();
+            setAnalysisData(result);
+        } catch (err) {
+            console.error("[ERROR] Analysis fetch error:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (markerPosition[0] !== 20.5937 || markerPosition[1] !== 78.9629) {
+            fetchAnalysis(markerPosition[0], markerPosition[1]);
+        }
+    }, [markerPosition]);
 
     const handleLiveLocation = () => {
         if (navigator.geolocation) {

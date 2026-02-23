@@ -72,7 +72,20 @@ def analyze():
         "projection": projection,
         "score": calculated_score,
         "id": analysis.id,
-        "location": {"lat": lat, "lng": lng}
+        "location": {"lat": lat, "lng": lng},
+        # Added for dynamic chart updates
+        "risk_profile": {
+            "labels": ['Flood', 'Heat', 'Storm', 'Sea Level', 'Fire'],
+            "data": [risks['flood']['value'], risks['heat']['value'], risks['storm']['value'], risks['sea_level']['value'], 30]
+        },
+        "temperature_trend": {
+            "labels": [str(p['year']) for p in projection],
+            "data": [p['risk'] for p in projection]
+        },
+        "environmental_composition": {
+            "labels": ['Built Up', 'Greenery', 'Water'],
+            "data": [70, 20, 10] # Using existing logic placeholder
+        }
     }), 200
 
 @analysis_bp.route('/analyze-property', methods=['POST'])

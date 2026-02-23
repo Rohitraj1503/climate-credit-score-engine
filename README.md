@@ -1,51 +1,316 @@
-# Climate Credit Score Engine
 
-A full-stack web application to evaluate long-term climate risks for properties and generate a Climate Credit Score for financial institutions.
 
-## Tech Stack
-- **Backend:** Python (Flask)
-- **Database:** Firebase Firestore
-- **Frontend:** HTML, CSS, JavaScript
-- **Visualization:** Chart.js, Leaflet.js
+# 🌍 Climate Credit Score Engine
 
-## Setup Instructions
+AI-Powered Climate Risk Intelligence Platform for Financial Institutions & Borrowers
 
-### 1. Prerequisites
-- Python 3.8+
-- node.js (optional, only if you expand to React/Vue)
-- Firebase Account (for `serviceAccountKey.json`)
+---
 
-### 2. Installation
+## 🚀 Overview
 
-1.  Clone or download the repository.
-2.  Navigate to the project directory:
-    ```bash
-    cd climate-credit-score-engine
-    ```
-3.  Install Python dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
+**Climate Credit Score Engine** is a full-stack climate risk assessment platform that evaluates how environmental and climate factors impact property-based lending decisions.
 
-### 3. Firebase Configuration
-1.  Go to your Firebase Project Settings > Service Accounts.
-2.  Generate a new private key (`.json` file).
-3.  Rename it to `serviceAccountKey.json` and place it in the root of this project (next to `app.py`).
-    - *Note:* The app handles missing credentials gracefully for demo purposes (database features will be disabled).
+The system analyzes a property’s geographic location using climate models and generates a **Climate Credit Score**, helping banks, lenders, and investors make smarter, climate-aware financial decisions.
 
-### 4. Running the App
-1.  Start the Flask server:
-    ```bash
-    python app.py
-    ```
-    Or if you have `flask` installed globally:
-    ```bash
-    flask run
-    ```
-2.  Open your browser and search for the localhost URL (usually `http://127.0.0.1:5000`).
+This project bridges **FinTech + ClimateTech + AI** by converting environmental risk into financial intelligence.
 
-## Features
--   **Analysis Engine:** Evaluate properties by location.
--   **Climate Credit Score:** 0-100 rating based on Flood, Storm, Heat, and Sea Level risks.
--   **Portfolio Dashboard:** View aggregate risk across multiple assets.
--   **Interactive Maps:** Visual location confirmation and portfolio mapping.
+---
+
+## 🎯 Problem Statement
+
+Traditional credit scoring models ignore climate risks such as:
+
+* Flood exposure
+* Heat waves
+* Sea-level rise
+* Storm frequency
+* Environmental degradation
+
+As climate risks increase, lenders face hidden financial exposure.
+
+👉 Our solution introduces a **Climate Credit Score** to quantify environmental risk for loans and assets.
+
+---
+
+## 💡 Solution
+
+The platform:
+
+1. Accepts property **address or coordinates**
+2. Converts location → latitude & longitude
+3. Fetches climate & environmental indicators
+4. Runs risk analysis algorithms
+5. Generates a climate-adjusted credit score
+6. Visualizes risk through interactive dashboards
+
+---
+
+## 🧠 Key Features
+
+### 📍 Property Climate Analysis
+
+* Address or coordinate-based analysis
+* Live map visualization
+* Location fetch & geocoding
+
+### 📊 Climate Risk Dashboard
+
+* Regional Risk Profile (Radar Chart)
+* Historical Temperature Trends
+* Environmental Composition Analysis
+
+### 💳 Climate Credit Score
+
+* AI-based scoring engine
+* Loan adjustment recommendations
+* Risk classification (Low / Medium / High)
+
+### 🗂 Portfolio Management
+
+* Multi-property risk overview
+* Asset distribution visualization
+* Portfolio climate exposure scoring
+
+### 📄 Reporting
+
+* Downloadable analysis reports
+* Portfolio summaries
+
+---
+
+## 🏗️ System Architecture
+
+```
+Frontend (React + Vite)
+        ↓
+API Layer (FastAPI / Flask Backend)
+        ↓
+Climate Analysis Engine
+        ↓
+External APIs (Geocoding + Climate Data)
+```
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+
+* React 19
+* Vite
+* React Router
+* React Leaflet (Maps)
+* Chart.js
+* Tailwind / Custom CSS UI
+
+### Backend
+
+* Python (FastAPI / Flask)
+* REST API Architecture
+* Climate Risk Calculation Engine
+
+### Data & APIs
+
+* OpenStreetMap / Nominatim (Geocoding)
+* Climate datasets (simulated / API-ready)
+* Gemini API (AI reasoning support)
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/yourusername/climate-credit-score-engine.git
+cd climate-credit-score-engine
+```
+
+---
+
+### 2️⃣ Backend Setup
+
+```bash
+cd backend
+python -m venv venv
+venv\Scripts\activate   # Windows
+pip install -r requirements.txt
+python app.py
+```
+
+Backend runs at:
+
+```
+http://127.0.0.1:5001
+```
+
+---
+
+### 3️⃣ Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend runs at:
+
+```
+http://localhost:5173
+```
+
+---
+
+## ▶️ Run Frontend + Backend Together
+
+Install concurrently:
+
+```bash
+npm install concurrently --save-dev
+```
+
+Add script in `package.json`:
+
+```json
+"start": "concurrently \"npm run dev\" \"cd backend && python app.py\""
+```
+
+Run:
+
+```bash
+npm run start
+```
+
+---
+
+## 🔑 Environment Variables
+
+Create `.env` file:
+
+```
+VITE_API_URL=http://127.0.0.1:5001
+GEMINI_API_KEY=your_key_here
+```
+
+---
+
+## 📡 API Endpoints
+
+### Health Check
+
+```
+GET /
+```
+
+Response:
+
+```json
+{
+  "name": "Climate Credit Score Engine API",
+  "status": "online"
+}
+```
+
+---
+
+### Analyze Property
+
+```
+POST /api/analyze
+```
+
+Request:
+
+```json
+{
+  "latitude": 28.6139,
+  "longitude": 77.2090,
+  "asset_value": 1000000,
+  "loan_term": 30
+}
+```
+
+Response:
+
+```json
+{
+  "climate_score": 72,
+  "risk_profile": {},
+  "temperature_trend": [],
+  "environmental_composition": {}
+}
+```
+
+---
+
+## 📈 Climate Credit Score Logic (Concept)
+
+Score is derived using:
+
+```
+Climate Score =
+100
+- Flood Risk Weight
+- Heat Risk Weight
+- Storm Exposure
+- Sea Level Vulnerability
++ Environmental Stability
+```
+
+---
+
+## 🎨 UI Highlights
+
+* Dark fintech theme
+* Glassmorphism cards
+* Interactive charts
+* Real-time map updates
+* Startup-grade dashboard design
+
+---
+
+## 🔮 Future Improvements
+
+* Real climate APIs integration (NASA / Open-Meteo)
+* ML-based risk prediction
+* Bank API integrations
+* ESG investment scoring
+* Satellite imagery analysis
+
+---
+
+## 👨‍💻 Team
+
+**Carbon Coders**
+
+Built for Hackathon Innovation 🚀
+
+---
+
+## 📜 License
+
+MIT License — Free for educational & research use.
+
+---
+
+## ⭐ Why This Project Matters
+
+Climate risk will redefine finance.
+
+This platform enables:
+
+* Climate-aware lending
+* Sustainable investments
+* Risk-resilient portfolios
+* ESG compliance
+
+---
+
+## ❤️ Acknowledgements
+
+* OpenStreetMap
+* Climate Data Communities
+* Open-source ecosystem
+
+
